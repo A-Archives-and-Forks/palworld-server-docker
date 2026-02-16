@@ -55,11 +55,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jo \
     jq \
     netcat-traditional \
-    libicu76 \
     unzip \
     libcap2-bin libpcap0.8 \
     ca-certificates \
     python3 python3-venv python3-pip \
+    && (apt-get install -y --no-install-recommends libicu76 || apt-get install -y --no-install-recommends libicu72) \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
