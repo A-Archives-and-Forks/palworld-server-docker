@@ -8,7 +8,7 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
 
     LogInfo "Launch proxy."
     MITMPROXY_ADDONS_DIR="/home/steam/server/autopause/community/addons"
-    IGNORE_HOSTS="api.steamcmd.net"
+    IGNORE_HOSTS="api.steamcmd.net,discord.com"
     IGNORE_HOSTS_PATTERN=$(echo "$IGNORE_HOSTS" | tr ',' '\n' | sed 's/\./\\./g' | paste -sd '|' -)
     MITMPROXY_OPTIONS=(
         "--set" "block_global=false"
