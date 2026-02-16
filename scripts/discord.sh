@@ -64,7 +64,13 @@ else
     COLOR=$DISCORD_BLUE
 fi
 
-JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+MENTION=$(echo "${MESSAGE}" | grep -oE '<@&[0-9]+>')
+if [ -n "$MENTION" ]; then
+    MESSAGE=$(echo "${MESSAGE}" | sed -E 's/<@&[0-9]+>//g')
+    JSON=$(jo content="$MENTION" embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+else
+    JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+fi
 
 if [ "$ENABLED" = true ]; then
     if [ "$URL" == "" ]; then
