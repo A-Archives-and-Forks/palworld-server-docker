@@ -55,14 +55,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jo \
     jq \
     netcat-traditional \
-    libicu72 \
     unzip \
     libcap2-bin libpcap0.8 \
-    mitmproxy \
     ca-certificates \
-    python3 \
+    python3 python3-venv python3-pip \
+    && (apt-get install -y --no-install-recommends libicu76 || apt-get install -y --no-install-recommends libicu72) \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m venv /opt/mitmproxy-venv \
+    && /opt/mitmproxy-venv/bin/pip install --no-cache-dir mitmproxy \
+    && ln -s /opt/mitmproxy-venv/bin/mitmproxy /usr/local/bin/ \
+    && ln -s /opt/mitmproxy-venv/bin/mitmdump /usr/local/bin/ \
+    && ln -s /opt/mitmproxy-venv/bin/mitmweb /usr/local/bin/
 
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
