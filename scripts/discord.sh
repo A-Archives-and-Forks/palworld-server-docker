@@ -64,7 +64,16 @@ else
     COLOR=$DISCORD_BLUE
 fi
 
-JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+MENTION_REGEX='<(@!?[0-9]+|@&[0-9]+|#[0-9]+)>|@everyone|@here'
+MENTION=$(echo "$MESSAGE" | grep -oE "$MENTION_REGEX" | xargs)
+if [ -n "$MENTION" ]; then
+    MESSAGE=$(echo "$MESSAGE" | sed -E "s/$MENTION_REGEX//g")
+    # Escape with backslash to prevent strings starting with @, %, : from being interpreted as filenames or stdin
+    JSON=$(jo content="\\$MENTION" embeds[]="$(jo title="\\$TITLE" description="\\$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+else
+    # Escape with backslash to prevent strings starting with @, %, : from being interpreted as filenames or stdin
+    JSON=$(jo embeds[]="$(jo title="\\$TITLE" description="\\$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
+fi
 
 if [ "$ENABLED" = true ]; then
     if [ "$URL" == "" ]; then
